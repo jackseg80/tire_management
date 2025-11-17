@@ -8,13 +8,13 @@ A comprehensive tire tracking and analytics system for TeslaMate that monitors t
 
 ## Features
 
-- 📊 Track multiple tire sets (summer/winter)
-- 📈 Real-time tire performance statistics
-- 🌡️ Temperature and pressure monitoring (TPMS)
-- ⚡ Energy consumption per tire set (Wh/km)
-- 🔄 Automatic calculation from TeslaMate drive data
-- 📉 Historical tire performance comparison
-- 🎯 Grafana dashboard for visualization
+- Track multiple tire sets (summer/winter)
+- Real-time tire performance statistics
+- Temperature and pressure monitoring (TPMS)
+- Energy consumption per tire set (Wh/km)
+- Automatic calculation from TeslaMate drive data
+- Historical tire performance comparison
+- Grafana dashboard for visualization
 
 ## Screenshots
 
@@ -216,13 +216,13 @@ Un système complet de suivi et d'analyse des pneus pour TeslaMate qui surveille
 
 ## Fonctionnalités
 
-- 📊 Suivi de plusieurs jeux de pneus (été/hiver)
-- 📈 Statistiques de performance en temps réel
-- 🌡️ Surveillance de la température et de la pression (TPMS)
-- ⚡ Consommation d'énergie par jeu de pneus (Wh/km)
-- 🔄 Calcul automatique à partir des données de conduite TeslaMate
-- 📉 Comparaison historique des performances
-- 🎯 Dashboard Grafana pour la visualisation
+- Suivi de plusieurs jeux de pneus (été/hiver)
+- Statistiques de performance en temps réel
+- Surveillance de la température et de la pression (TPMS)
+- Consommation d'énergie par jeu de pneus (Wh/km)
+- Calcul automatique à partir des données de conduite TeslaMate
+- Comparaison historique des performances
+- Dashboard Grafana pour la visualisation
 
 ## Prérequis
 
