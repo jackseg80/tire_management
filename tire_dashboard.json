@@ -18,387 +18,13 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 43,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
-        "type": "postgres",
-        "uid": "${DS_TESLAMATE}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Type"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 80
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Start Date"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 120
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "End Date"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 120
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Total km"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "lengthkm"
-              },
-              {
-                "id": "decimals",
-                "value": 0
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Consumption (Wh/km)"
-            },
-            "properties": [
-              {
-                "id": "decimals",
-                "value": 1
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Avg Temp (°C)"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "celsius"
-              },
-              {
-                "id": "decimals",
-                "value": 1
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "id": 1,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": ["sum"],
-          "show": false
-        },
-        "showHeader": true
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "${DS_TESLAMATE}"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \n    ts.name as \"Tire Set\",\n    ts.brand || ' ' || ts.model as \"Model\",\n    ts.tire_type as \"Type\",\n    ts.start_date as \"Start Date\",\n    ts.end_date as \"End Date\",\n    ROUND(tss.total_km::numeric, 0) as \"Total km\",\n    ROUND(tss.avg_consumption_whkm::numeric, 1) as \"Consumption (Wh/km)\",\n    ROUND(tss.avg_outside_temp::numeric, 1) as \"Avg Temp (°C)\",\n    tss.total_drives as \"Drives\"\nFROM tire_sets ts\nLEFT JOIN tire_set_statistics tss ON ts.id = tss.tire_set_id\nORDER BY ts.start_date DESC;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Tire Sets Overview",
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "${DS_TESLAMATE}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "tooltip": false,
-              "viz": false,
-              "legend": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "lengthkm"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 10
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "${DS_TESLAMATE}"
-          },
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT \n    ts.start_date as time,\n    ts.name as metric,\n    tss.total_km as value\nFROM tire_sets ts\nLEFT JOIN tire_set_statistics tss ON ts.id = tss.tire_set_id\nWHERE tss.total_km IS NOT NULL\nORDER BY ts.start_date;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Total Distance per Tire Set",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "${DS_TESLAMATE}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Wh/km",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "tooltip": false,
-              "viz": false,
-              "legend": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 10
-      },
-      "id": 3,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "${DS_TESLAMATE}"
-          },
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT \n    ts.start_date as time,\n    ts.name as metric,\n    ROUND(tss.avg_consumption_whkm::numeric, 1) as value\nFROM tire_sets ts\nLEFT JOIN tire_set_statistics tss ON ts.id = tss.tire_set_id\nWHERE tss.avg_consumption_whkm IS NOT NULL\nORDER BY ts.start_date;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Average Consumption per Tire Set",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "${DS_TESLAMATE}"
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
       },
       "fieldConfig": {
         "defaults": {
@@ -411,54 +37,49 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
-              },
-              {
-                "color": "green",
-                "value": 15
-              },
-              {
-                "color": "yellow",
-                "value": 25
-              },
-              {
-                "color": "red",
-                "value": 30
+                "value": 0
               }
             ]
-          },
-          "unit": "celsius"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 8,
+        "h": 3,
+        "w": 5,
         "x": 0,
-        "y": 18
+        "y": 0
       },
-      "id": 4,
+      "id": 20,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "values": false,
-          "calcs": ["lastNotNull"],
-          "fields": ""
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
-            "type": "postgres",
-            "uid": "${DS_TESLAMATE}"
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
           },
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    ts.name as \"metric\",\n    ROUND(tss.avg_outside_temp::numeric, 1) as \"value\"\nFROM tire_sets ts\nLEFT JOIN tire_set_statistics tss ON ts.id = tss.tire_set_id\nWHERE ts.end_date IS NULL\nAND tss.avg_outside_temp IS NOT NULL\nLIMIT 1;",
+          "rawSql": "SELECT COUNT(*) AS \"Sets Total\" FROM tire_sets WHERE car_id = 1;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -479,13 +100,13 @@
           }
         }
       ],
-      "title": "Current Tire Set - Avg Temperature",
-      "type": "gauge"
+      "title": "Sets de pneus",
+      "type": "stat"
     },
     {
       "datasource": {
-        "type": "postgres",
-        "uid": "${DS_TESLAMATE}"
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
       },
       "fieldConfig": {
         "defaults": {
@@ -498,80 +119,195 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 5,
+        "y": 0
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^name$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT name FROM tire_sets WHERE car_id = 1 AND date_end IS NULL;",
+          "refId": "A"
+        }
+      ],
+      "title": "Set actuel",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 9,
+        "y": 0
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT ROUND(SUM(kilometers), 0) AS \"Km\" FROM tire_set_statistics;",
+          "refId": "A"
+        }
+      ],
+      "title": "Kilométrage total",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "yellow",
-                "value": 180
+                "value": 75
               },
               {
-                "color": "red",
-                "value": 220
+                "color": "green",
+                "value": 80
               }
             ]
           },
-          "unit": "none"
+          "unit": "percent"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 18
+        "h": 3,
+        "w": 5,
+        "x": 14,
+        "y": 0
       },
-      "id": 5,
+      "id": 23,
       "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "values": false,
-          "calcs": ["lastNotNull"],
-          "fields": ""
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {
-          "valueSize": 60
-        }
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
-            "type": "postgres",
-            "uid": "${DS_TESLAMATE}"
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
           },
-          "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    ts.name as \"metric\",\n    ROUND(tss.avg_consumption_whkm::numeric, 1) as \"value\"\nFROM tire_sets ts\nLEFT JOIN tire_set_statistics tss ON ts.id = tss.tire_set_id\nWHERE ts.end_date IS NULL\nAND tss.avg_consumption_whkm IS NOT NULL\nLIMIT 1;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
+          "rawSql": "SELECT MAX(efficiency_percent) AS \"⚡ Meilleure Efficacité\" FROM tire_set_statistics;",
+          "refId": "A"
         }
       ],
-      "title": "Current Tire Set - Consumption (Wh/km)",
-      "type": "gauge"
+      "title": "Meilleure efficacité",
+      "type": "stat"
     },
     {
       "datasource": {
-        "type": "postgres",
-        "uid": "${DS_TESLAMATE}"
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
       },
       "fieldConfig": {
         "defaults": {
@@ -579,77 +315,616 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 40000,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 25000
+              },
+              {
+                "color": "orange",
+                "value": 35000
+              },
+              {
+                "color": "red",
+                "value": 38000
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 27,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT ROUND(kilometers, 0) AS \"Km\" FROM tire_sets_with_stats WHERE date_end IS NULL;",
+          "refId": "A"
+        }
+      ],
+      "title": "Km set actuel",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "green",
+                  "text": "✅ Pression OK"
+                },
+                "1": {
+                  "color": "red",
+                  "text": "⚠️ Pression basse"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 0,
+        "y": 3
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    CASE\n        WHEN AVG((tpms_pressure_fl + tpms_pressure_fr + tpms_pressure_rl + tpms_pressure_rr)/4) < 2.7\n        THEN 1\n        ELSE 0\n    END AS alert_level\nFROM positions \nWHERE car_id = 1 \n  AND date >= NOW() - INTERVAL '3 hours' \n  AND tpms_pressure_fl IS NOT NULL;",
+          "refId": "A"
+        }
+      ],
+      "title": "🔧 Alerte Pression",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "green",
+                  "text": "✅ Saison OK"
+                },
+                "1": {
+                  "color": "orange",
+                  "text": "❄️ Pneus d'hiver"
+                },
+                "2": {
+                  "color": "orange",
+                  "text": "☀️ Pneus d'été"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 12,
+        "y": 3
+      },
+      "id": 26,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    CASE\n        WHEN EXTRACT(MONTH FROM CURRENT_DATE) IN (11,12,1,2,3) \n             AND (SELECT type FROM tire_sets_with_stats WHERE date_end IS NULL) = 'Summer'\n        THEN 1\n        WHEN EXTRACT(MONTH FROM CURRENT_DATE) IN (4,5,6,7,8,9,10) \n             AND (SELECT type FROM tire_sets_with_stats WHERE date_end IS NULL) = 'Winter'\n        THEN 2\n        ELSE 0\n    END AS alert_level;",
+          "refId": "A"
+        }
+      ],
+      "title": "🌡️ Alerte Saison",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Durée"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "d"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    name AS \"Set Actuel\",\n    brand || ' ' || model AS \"Modèle\",\n    type AS \"Type\",\n    tire_size AS \"Taille\",\n    TO_CHAR(date_start, 'DD/MM/YYYY') AS \"Monté le\",\n    (CURRENT_DATE - date_start) AS \"Durée\",\n    ROUND(kilometers, 0)::TEXT || ' km' AS \"Kilométrage\",\n    ROUND(consumption_wh_km, 0)::TEXT || ' wH/km' AS \"Consommation\",\n    ROUND(temperature_avg, 1)::TEXT || ' °C' AS \"Temp moy\"\nFROM tire_sets_with_stats\nWHERE date_end IS NULL;",
+          "refId": "A"
+        }
+      ],
+      "title": "🎯 Set de pneus actuel",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
               }
             ]
           },
-          "unit": "lengthkm"
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wH/km"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 170
+                    },
+                    {
+                      "color": "orange",
+                      "value": 190
+                    },
+                    {
+                      "color": "red",
+                      "value": 200
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 86
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tire Model"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 314
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Type"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 107
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Efficiency %"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 128
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kilometers"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 153
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Start Date"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 183
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "End Date"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 179
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Temp AVG (°C)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 140
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 196
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    name AS \"Name\",\n    brand || ' ' || model AS \"Tire Model\",\n    type AS \"Type\",\n    ROUND(temperature_avg, 1) AS \"Temp AVG (°C)\",\n    ROUND(consumption_wh_km, 0) AS \"wH/km\",\n    ROUND(efficiency_percent, 1) AS \"Efficiency %\",\n    ROUND(kilometers, 0) AS \"Kilometers\",\n    TO_CHAR(date_start, 'YYYY-MM-DD') AS \"Start Date\",\n    COALESCE(TO_CHAR(date_end, 'YYYY-MM-DD'), 'Actuel') AS \"End Date\",\n    CASE \n        WHEN date_end IS NULL THEN '🟢 Actif'\n        ELSE '⚪ Inactif'\n    END AS \"Status\"\nFROM tire_sets_with_stats\nORDER BY date_start DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "📊 Vue d'ensemble des pneus",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 3.5,
+          "min": 2.5,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 2.7
+              },
+              {
+                "color": "green",
+                "value": 2.8
+              },
+              {
+                "color": "green",
+                "value": 3
+              },
+              {
+                "color": "orange",
+                "value": 3.2
+              }
+            ]
+          },
+          "unit": "pressurebar"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 18
+        "w": 12,
+        "x": 0,
+        "y": 19
       },
       "id": 6,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "values": false,
-          "calcs": ["lastNotNull"],
-          "fields": ""
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "showThresholdLabels": false,
+        "showThresholdLabels": true,
         "showThresholdMarkers": true,
+        "sizing": "auto",
         "text": {
-          "valueSize": 60
+          "valueSize": 15
         }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
-            "type": "postgres",
-            "uid": "${DS_TESLAMATE}"
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
           },
-          "editorMode": "code",
-          "format": "table",
+          "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT \n    ts.name as \"metric\",\n    ROUND(tss.total_km::numeric, 0) as \"value\"\nFROM tire_sets ts\nLEFT JOIN tire_set_statistics tss ON ts.id = tss.tire_set_id\nWHERE ts.end_date IS NULL\nAND tss.total_km IS NOT NULL\nLIMIT 1;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
+          "rawSql": "SELECT \n    date AS time,\n    tpms_pressure_fl AS \"Avant Gauche (FL)\",\n    tpms_pressure_fr AS \"Avant Droit (FR)\",\n    tpms_pressure_rl AS \"Arrière Gauche (RL)\",\n    tpms_pressure_rr AS \"Arrière Droit (RR)\"\nFROM positions\nWHERE car_id = 1 \n  AND tpms_pressure_fl IS NOT NULL\n  AND date >= NOW() - INTERVAL '3 hours'\nORDER BY date DESC\nLIMIT 1;",
+          "refId": "A"
         }
       ],
-      "title": "Current Tire Set - Total Distance",
+      "title": "🔧 Pressions actuelles (TPMS)",
       "type": "gauge"
     },
     {
       "datasource": {
-        "type": "postgres",
-        "uid": "${DS_TESLAMATE}"
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
       },
       "fieldConfig": {
         "defaults": {
@@ -657,26 +932,190 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "Wh/km",
+            "axisLabel": "Pression (bars)",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 3.3,
+          "min": 2.5,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "pressurebar"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FL"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FR"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RL"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RR"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "last",
+            "min",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    date AS time,\n    tpms_pressure_fl AS \"FL\",\n    tpms_pressure_fr AS \"FR\",\n    tpms_pressure_rl AS \"RL\",\n    tpms_pressure_rr AS \"RR\"\nFROM positions\nWHERE car_id = 1 \n  AND tpms_pressure_fl IS NOT NULL\n  AND $__timeFilter(date)\nORDER BY date;",
+          "refId": "A"
+        }
+      ],
+      "title": "📉 Historique des pressions TPMS",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Consommation (wH/km)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "none",
             "hideFrom": {
+              "legend": false,
               "tooltip": false,
-              "viz": false,
-              "legend": false
+              "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
+            "showPoints": "auto",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -692,7 +1131,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -731,73 +1170,257 @@
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 24,
+        "h": 7,
+        "w": 16,
         "x": 0,
-        "y": 26
+        "y": 27
       },
-      "id": 7,
+      "id": 4,
       "options": {
         "legend": {
-          "calcs": ["mean", "lastNotNull"],
+          "calcs": [
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    date_trunc('day', d.start_date) AS time,\n    tm.type,\n    AVG(\n        CASE \n            WHEN d.start_ideal_range_km IS NOT NULL \n                 AND d.end_ideal_range_km IS NOT NULL \n                 AND d.distance > 0\n                 AND d.start_ideal_range_km > d.end_ideal_range_km\n            THEN (d.start_ideal_range_km - d.end_ideal_range_km) * 162 / d.distance\n            ELSE NULL\n        END\n    ) AS consumption_wh_km\nFROM drives d\nJOIN tire_sets ts ON \n    d.car_id = ts.car_id AND\n    d.start_date >= ts.date_start AND \n    (d.start_date <= ts.date_end OR ts.date_end IS NULL)\nJOIN tire_models tm ON ts.tire_model_id = tm.id\nWHERE d.car_id = 1 \n  AND d.distance > 1\n  AND $__timeFilter(d.start_date)\nGROUP BY 1, 2\nHAVING AVG(\n    CASE \n        WHEN d.start_ideal_range_km IS NOT NULL \n             AND d.end_ideal_range_km IS NOT NULL \n             AND d.distance > 0\n             AND d.start_ideal_range_km > d.end_ideal_range_km\n        THEN (d.start_ideal_range_km - d.end_ideal_range_km) * 162 / d.distance\n        ELSE NULL\n    END\n) > 0\nORDER BY 1;",
+          "refId": "A"
+        }
+      ],
+      "title": "📈 Consommation par type de pneus (temps réel - données partielles)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 27
+      },
+      "id": 24,
+      "options": {
+        "displayLabels": [
+          "name",
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    CASE \n        WHEN type = 'Summer' THEN 'Été'\n        WHEN type = 'Winter' THEN 'Hiver'\n        ELSE type\n    END as metric,\n    SUM(kilometers) as value\nFROM tire_sets_with_stats\nGROUP BY type;",
+          "refId": "A"
+        }
+      ],
+      "title": "Répartition Été/Hiver",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "PC98BA2F4D77E1A42"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Consommation (wH/km)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Summer"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Winter"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
-            "type": "postgres",
-            "uid": "${DS_TESLAMATE}"
+            "type": "grafana-postgresql-datasource",
+            "uid": "PC98BA2F4D77E1A42"
           },
-          "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT \n    ts.start_date as time,\n    CASE \n        WHEN ts.tire_type = 'summer' THEN 'Summer'\n        WHEN ts.tire_type = 'winter' THEN 'Winter'\n    END as metric,\n    ROUND(tss.avg_consumption_whkm::numeric, 1) as value\nFROM tire_sets ts\nLEFT JOIN tire_set_statistics tss ON ts.id = tss.tire_set_id\nWHERE tss.avg_consumption_whkm IS NOT NULL\nORDER BY ts.start_date;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
+          "rawSql": "SELECT \n    ts.date_start AS time,\n    tm.type,\n    tss.consumption_wh_km\nFROM tire_sets ts\nJOIN tire_models tm ON ts.tire_model_id = tm.id\nLEFT JOIN tire_set_statistics tss ON ts.id = tss.tire_set_id\nWHERE ts.car_id = 1\n  AND tss.consumption_wh_km IS NOT NULL\nORDER BY ts.date_start;",
+          "refId": "A"
         }
       ],
-      "title": "Consumption Comparison: Summer vs Winter",
+      "title": "📊 Comparaison historique par set (données réelles TeslaFi)",
       "type": "timeseries"
     }
   ],
-  "refresh": "",
-  "schemaVersion": 38,
-  "style": "dark",
-  "tags": ["teslamate", "tires"],
+  "preload": false,
+  "refresh": "5m",
+  "schemaVersion": 41,
+  "tags": [
+    "teslamate",
+    "tires",
+    "maintenance",
+    "Tesla"
+  ],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-2y",
+    "from": "now-1y",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Tire Management",
-  "uid": "tire-management",
-  "version": 1,
-  "weekStart": ""
+  "title": "Gestion des Pneus V2",
+  "uid": "tire_management_optimized",
+  "version": 17
 }
