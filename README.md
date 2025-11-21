@@ -1,333 +1,610 @@
 # TeslaMate Tire Management System
 
-A comprehensive tire tracking and analytics system for TeslaMate that monitors tire performance, consumption, and TPMS data.
+A comprehensive tire tracking and performance analytics system for TeslaMate with automatic statistics calculation and Grafana visualization.
 
-[Version française ci-dessous](#système-de-gestion-des-pneus-pour-teslamate)
+**[Version française ci-dessous](#système-de-gestion-des-pneus-pour-teslamate)**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TeslaMate](https://img.shields.io/badge/TeslaMate-Compatible-blue.svg)](https://github.com/teslamate-org/teslamate)
 
 ---
 
-## Features
+## 🌟 Features
 
-- Track multiple tire sets (summer/winter)
-- Real-time tire performance statistics
-- Temperature and pressure monitoring (TPMS)
-- Energy consumption per tire set (Wh/km)
-- Automatic calculation from TeslaMate drive data
-- Historical tire performance comparison
-- Grafana dashboard for visualization
+- **Track Unlimited Tire Sets** - Monitor summer, winter, and all-season tires
+- **Automatic Statistics** - Calculates performance from TeslaMate drive data
+- **Energy Consumption** - Track Wh/km with calibrated conversion factor
+- **Driving Efficiency** - Monitor efficiency percentage per tire set
+- **Temperature Correlation** - See how temperature affects performance
+- **Historical Comparison** - Compare tire sets over time
+- **Grafana Dashboard** - Visual analytics with 7+ panels
+- **Easy Tire Changes** - Simple SQL commands to switch tires
 
-## Screenshots
+## 📸 Screenshots
 
 ![Tire Management Dashboard](screenshots/dashboard.png)
 
-## Requirements
+*Dashboard showing tire performance statistics, consumption, and efficiency*
 
-- TeslaMate (any recent version)
+## 🎯 Why This System?
+
+Unlike generic tire tracking, this system:
+- ✅ **Automatically calculates** statistics from your actual driving data
+- ✅ **Uses calibrated factor (162)** for accurate Model S 75D consumption
+- ✅ **Filters short trips** that skew consumption averages
+- ✅ **Preserves historical data** when importing from TeslaFi
+- ✅ **Updates seamlessly** with your TeslaMate installation
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- TeslaMate installed and running
 - PostgreSQL database access
-- Grafana
+- Grafana (included with TeslaMate)
 - Docker (recommended)
 
-## Installation
+### Installation (5 minutes)
 
-### 1. Database Setup
-
-Connect to your TeslaMate PostgreSQL database:
+1. **Install the database schema:**
 
 ```bash
-docker exec -it teslamate_database_1 psql -U teslamate teslamate
-```
-
-Or if your container has a different name:
-
-```bash
+# Find your PostgreSQL container
 docker ps | grep postgres
-docker exec -it <container_name> psql -U teslamate teslamate
+
+# Install schema (replace container name if needed)
+docker exec -i teslamate-database-1 psql -U teslamate teslamate < tire_management.sql
 ```
 
-### 2. Create Database Schema
-
-Run the SQL script to create the necessary tables and functions:
+2. **Add your tire data:**
 
 ```bash
-docker exec -i teslamate_database_1 psql -U teslamate teslamate < tire_management.sql
+docker exec -it teslamate-database-1 psql -U teslamate teslamate
 ```
 
-Or copy and paste the content of `tire_management.sql` directly into your psql session.
-
-### 3. Import Your Tire Data
-
-Edit the SQL script to add your tire sets. Example:
+Then paste:
 
 ```sql
-INSERT INTO tire_sets (name, brand, model, size, start_date, end_date, tire_type, initial_odometer, final_odometer) VALUES
-('Summer 2024', 'Michelin', 'PilotSport 3', '245/45 R19 102V XL', '2024-03-15', '2024-11-01', 'summer', 145000, 155000),
-('Winter 2024-2025', 'Goodyear', 'UltraGrip Performance+', '245/45 R19 102V XL', '2024-11-01', NULL, 'winter', 155000, NULL);
+-- Add a tire model
+INSERT INTO tire_models (brand, model, size, type) VALUES
+('Michelin', 'PilotSport 4', '245/45 R19 102V XL', 'Summer');
+
+-- Add your current tire set
+INSERT INTO tire_sets (car_id, name, tire_model_id, date_start) VALUES
+(1, 'Summer 2024', 1, '2024-03-20');
+
+-- Calculate statistics
+SELECT update_current_tire_stats();
+
+-- Exit
+\q
 ```
 
-**Important fields:**
-- `start_date` and `end_date`: Define the period this tire set was active
-- `initial_odometer` and `final_odometer`: Odometer readings at installation/removal
-- Set `end_date` and `final_odometer` to `NULL` for currently active tires
+3. **Import Grafana dashboard:**
 
-### 4. Calculate Statistics
+- Open Grafana: `http://localhost:3000`
+- Go to **Dashboards** → **Import**
+- Upload `tire_dashboard.json`
+- Select **TeslaMate** data source
+- Click **Import**
 
-After importing tire data, run the calculation function:
+Done! 🎉
 
-```sql
-SELECT update_tire_statistics();
-```
+## 📊 Dashboard Overview
 
-This function will:
-- Calculate total distance for each tire set
-- Compute average energy consumption (Wh/km)
-- Calculate efficiency percentages
-- Aggregate temperature data
+The Grafana dashboard includes:
 
-### 5. Import Grafana Dashboard
+1. **Overview Table** - All tire sets with key statistics
+2. **Distance Chart** - Total kilometers per tire set
+3. **Consumption Chart** - Average Wh/km per tire set
+4. **Current Tire Gauges** - Real-time stats for active tires
+5. **Summer vs Winter** - Performance comparison pie chart
+6. **Temperature Correlation** - See how weather affects consumption
+7. **Efficiency Tracking** - Monitor driving efficiency over time
 
-1. Open Grafana (usually at http://localhost:3000)
-2. Go to Dashboards → Import
-3. Upload `tire_dashboard.json`
-4. Select your TeslaMate data source
-5. Click Import
-
-## Usage
+## 🔧 Usage
 
 ### Adding a New Tire Set
 
+When changing tires:
+
 ```sql
--- End the current tire set
+-- 1. Close the current tire set
 UPDATE tire_sets 
-SET end_date = '2025-11-16', 
-    final_odometer = 165000
-WHERE name = 'Winter 2024-2025';
+SET date_end = CURRENT_DATE
+WHERE date_end IS NULL;
 
--- Add the new tire set
-INSERT INTO tire_sets (name, brand, model, size, start_date, tire_type, initial_odometer)
-VALUES ('Summer 2025', 'Michelin', 'PilotSport 4', '245/45 R19 102V XL', '2025-03-20', 'summer', 165000);
+-- 2. Add the new tire set
+INSERT INTO tire_sets (car_id, name, tire_model_id, date_start)
+VALUES (1, 'Winter 2025-2026', 2, CURRENT_DATE);
 
--- Recalculate statistics
-SELECT update_tire_statistics();
+-- 3. Update statistics
+SELECT update_current_tire_stats();
 ```
 
-### Manual Data Refresh
+Or use the automated script:
 
-The statistics are calculated from TeslaMate's drive data. To refresh:
-
-```sql
-SELECT update_tire_statistics();
+```bash
+./update_current_tire.sh
 ```
 
-You can also set up a PostgreSQL cron job or trigger to automate this.
+### Updating Statistics
+
+Statistics update automatically when you run:
+
+```bash
+./update_current_tire.sh
+```
+
+Or set up a cron job for automatic daily updates:
+
+```bash
+# Edit crontab
+crontab -e
+
+# Add this line (updates daily at 2 AM)
+0 2 * * * cd /path/to/teslamate && ./update_current_tire.sh >> tire_update.log 2>&1
+```
 
 ### Viewing Statistics
 
 ```sql
-SELECT * FROM tire_set_statistics ORDER BY start_date DESC;
+-- All tire sets
+SELECT * FROM tire_sets_with_stats ORDER BY date_start DESC;
+
+-- Current tire only
+SELECT * FROM tire_sets_with_stats WHERE date_end IS NULL;
+
+-- Summer vs Winter comparison
+SELECT 
+    type,
+    AVG(consumption_wh_km) as avg_consumption,
+    AVG(efficiency_percent) as avg_efficiency
+FROM tire_sets_with_stats
+GROUP BY type;
 ```
 
-## Database Schema
+## 📐 Database Schema
 
 ### Tables
 
-#### `tire_sets`
-Stores information about each set of tires installed on the vehicle.
+#### `tire_models`
+Tire specifications catalog
 
 | Column | Type | Description |
 |--------|------|-------------|
 | id | SERIAL | Primary key |
-| name | VARCHAR(100) | Tire set name (e.g., "Summer 2024") |
-| brand | VARCHAR(100) | Tire brand |
-| model | VARCHAR(100) | Tire model |
-| size | VARCHAR(50) | Tire size specification |
-| start_date | DATE | Installation date |
-| end_date | DATE | Removal date (NULL if currently active) |
-| tire_type | VARCHAR(20) | 'summer' or 'winter' |
-| initial_odometer | INTEGER | Odometer at installation |
-| final_odometer | INTEGER | Odometer at removal (NULL if active) |
-| notes | TEXT | Additional notes |
+| brand | VARCHAR(50) | Tire brand (e.g., Michelin) |
+| model | VARCHAR(100) | Tire model (e.g., PilotSport 4) |
+| size | VARCHAR(30) | Tire size (e.g., 245/45 R19) |
+| type | VARCHAR(10) | Summer, Winter, All-Season |
+
+#### `tire_sets`
+Tire installation periods
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| car_id | INTEGER | Reference to cars table |
+| name | VARCHAR(50) | Set name (e.g., "Summer 2024") |
+| tire_model_id | INTEGER | Reference to tire_models |
+| date_start | DATE | Installation date |
+| date_end | DATE | Removal date (NULL = active) |
 
 #### `tire_set_statistics`
-Calculated statistics for each tire set (automatically populated).
+Calculated performance metrics (auto-populated)
 
 | Column | Type | Description |
 |--------|------|-------------|
 | tire_set_id | INTEGER | Reference to tire_sets |
-| total_km | DECIMAL | Total distance driven |
-| total_kwh | DECIMAL | Total energy consumed |
-| avg_consumption_whkm | DECIMAL | Average Wh/km |
-| avg_efficiency | DECIMAL | Average efficiency % |
-| avg_temp | DECIMAL | Average temperature |
-| total_drives | INTEGER | Number of drives |
+| kilometers | DECIMAL | Total distance driven |
+| consumption_wh_km | DECIMAL | Average Wh/km |
+| efficiency_percent | DECIMAL | Driving efficiency % |
+| temperature_avg | DECIMAL | Average temperature |
+
+#### `tire_sets_with_stats` (View)
+Complete tire information with statistics - use this for queries!
 
 ### Function
 
-#### `update_tire_statistics()`
-Recalculates all tire statistics from TeslaMate drive data. Should be run after:
-- Adding new tire sets
-- Updating tire set dates
-- Periodically to refresh current tire data
+#### `update_current_tire_stats()`
 
-## Troubleshooting
+Recalculates statistics for active tire sets.
+
+**Features:**
+- Uses calibrated factor **162** for Model S 75D
+- Filters trips < 5 km to avoid outliers
+- Calculates true weighted average (not simple AVG)
+- Computes efficiency: `(distance / rated_range_used) × 100`
+- Only updates active tire sets (date_end = NULL)
+
+**Usage:**
+```sql
+SELECT update_current_tire_stats();
+```
+
+## ⚙️ Technical Details
+
+### Conversion Factor: 162 (Why not 187.5?)
+
+The factor **162** is calibrated for Tesla Model S 75D using TeslaMate's `ideal_range_km` values.
+
+**Why 162?**
+- Theoretical: 75 kWh ÷ 400 km = 187.5 Wh/km
+- But TeslaMate uses EPA range estimates, not actual battery capacity
+- Calibrated against real TeslaFi data:
+  - TeslaFi Summer 2024: **152 Wh/km** (reliable reference)
+  - TeslaMate with 187.5: **176 Wh/km** (+15% too high)
+  - TeslaMate with 162: **152 Wh/km** (perfect match!)
+
+**Formula:** `187.5 × (152/176) = 162`
+
+### Distance Filter: >= 5 km
+
+Short trips are excluded from consumption calculations because:
+- Battery preheating: 400-1000 Wh/km on 1-2 km trips
+- HVAC disproportionately high on short trips
+- These outliers significantly skew averages
+
+**Example:**
+- 1.0 km trip: 738 Wh/km (preheating)
+- 2.1 km trip: 1160 Wh/km (climate control)
+- 5.6 km trip: 426 Wh/km (still cold)
+- 10+ km trips: 140-200 Wh/km (normal)
+
+### Efficiency Calculation
+
+Based on Grafana's "Efficiency" dashboard formula:
+
+```
+efficiency = (distance_driven / rated_range_used) × 100
+```
+
+**Interpretation:**
+- 100% = Perfect efficiency (1 km driven = 1 km range used)
+- 85% = Good (typical summer)
+- 65% = Normal winter
+- <60% = Poor conditions (very cold, heavy traffic)
+
+## 🔍 Troubleshooting
 
 ### Statistics not updating
+
+**Problem:** `update_current_tire_stats()` runs but values are 0 or NULL
+
+**Solutions:**
+
 ```sql
--- Check if drives exist in the date range
-SELECT COUNT(*), MIN(start_date), MAX(start_date) 
+-- 1. Check if drives exist for tire period
+SELECT COUNT(*), MIN(start_date), MAX(start_date)
 FROM drives 
-WHERE start_date BETWEEN '2024-01-01' AND '2024-12-31';
+WHERE car_id = 1 
+  AND start_date >= '2024-01-01';
 
--- Verify tire set dates
-SELECT id, name, start_date, end_date FROM tire_sets;
+-- 2. Verify tire dates
+SELECT name, date_start, date_end 
+FROM tire_sets 
+ORDER BY date_start DESC;
 
--- Manually run update
-SELECT update_tire_statistics();
+-- 3. Check for date overlap
+-- Make sure tire dates overlap with drive dates
+
+-- 4. Manually trigger update
+SELECT update_current_tire_stats();
 ```
 
-### Dashboard shows no data
-- Verify the data source is correctly configured
-- Check the time range in Grafana
-- Ensure tire_set_statistics table has data
-- Refresh the dashboard
+### Dashboard shows "No Data"
+
+**Solutions:**
+
+1. **Check time range** - Click time picker (top right), try "Last 2 years"
+2. **Verify data source** - Dashboard settings → ensure "TeslaMate" is selected
+3. **Run statistics** - `SELECT update_current_tire_stats();`
+4. **Check query** - Edit panel → verify SQL queries are correct
 
 ### Container name issues
+
 ```bash
-# Find your container names
-docker ps | grep teslamate
+# Find your actual container name
 docker ps | grep postgres
 
-# Use the correct container name in commands
-docker exec -it <your_container_name> psql -U teslamate teslamate
+# Common names:
+# - teslamate-database-1
+# - teslamate_database_1
+# - teslamate-postgres-1
+
+# Use correct name in commands
+docker exec -it YOUR_CONTAINER_NAME psql -U teslamate teslamate
 ```
 
-## Contributing
+### Wrong consumption values
 
-Feel free to submit issues and pull requests!
+If your consumption seems off:
 
-## License
+1. **Check conversion factor** - Factor 162 is calibrated for Model S 75D
+2. **Verify distance filter** - Should be >= 5 km
+3. **Compare with known good data** - Use TeslaFi or other source as reference
+4. **Check for outliers** - Look for extremely high consumption trips
 
-MIT License - See LICENSE file for details
+```sql
+-- Find potential outlier trips
+SELECT 
+    start_date,
+    distance,
+    (start_ideal_range_km - end_ideal_range_km) * 162 / distance as consumption
+FROM drives
+WHERE distance > 1
+  AND distance < 10
+ORDER BY consumption DESC
+LIMIT 10;
+```
+
+## 📚 Advanced Usage
+
+### Import Historical TeslaFi Data
+
+If you have historical data with known statistics:
+
+```sql
+-- Method 1: Let function calculate from TeslaMate
+INSERT INTO tire_sets (car_id, name, tire_model_id, date_start, date_end)
+VALUES (1, 'Summer 2022', 1, '2022-06-01', '2022-11-15');
+SELECT update_current_tire_stats();
+
+-- Method 2: Manually set statistics (preserve TeslaFi data)
+INSERT INTO tire_set_statistics (tire_set_id, kilometers, consumption_wh_km, efficiency_percent)
+VALUES (1, 6221, 167, 75.9)
+ON CONFLICT (tire_set_id) DO UPDATE 
+SET kilometers = EXCLUDED.kilometers,
+    consumption_wh_km = EXCLUDED.consumption_wh_km,
+    efficiency_percent = EXCLUDED.efficiency_percent;
+```
+
+### Backup and Restore
+
+```bash
+# Full backup
+docker exec teslamate-database-1 pg_dump -U teslamate teslamate | gzip > teslamate_backup_$(date +%Y%m%d).sql.gz
+
+# Tire data only backup
+docker exec teslamate-database-1 pg_dump -U teslamate -d teslamate -t tire_models -t tire_sets -t tire_set_statistics > tire_backup.sql
+
+# Restore
+gunzip -c teslamate_backup_20241120.sql.gz | docker exec -i teslamate-database-1 psql -U teslamate teslamate
+```
+
+### Custom Queries
+
+```sql
+-- Monthly consumption trend
+SELECT 
+    DATE_TRUNC('month', d.start_date) as month,
+    AVG((d.start_ideal_range_km - d.end_ideal_range_km) * 162 / d.distance) as avg_consumption
+FROM drives d
+JOIN tire_sets ts ON d.start_date >= ts.date_start 
+    AND (ts.date_end IS NULL OR d.start_date <= ts.date_end)
+WHERE d.distance >= 5
+GROUP BY 1
+ORDER BY 1 DESC;
+
+-- Tire wear analysis
+SELECT 
+    name,
+    date_end - date_start as days_used,
+    kilometers,
+    ROUND(kilometers / (date_end - date_start + 1), 2) as km_per_day
+FROM tire_sets_with_stats
+WHERE date_end IS NOT NULL
+ORDER BY km_per_day DESC;
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - See [LICENSE](LICENSE) file for details
+
+## 🙏 Acknowledgments
+
+- [TeslaMate](https://github.com/teslamate-org/teslamate) - The amazing Tesla data logger
+- TeslaMate community for feature requests and feedback
+- Contributors who helped test and improve the system
+
+## 📞 Support
+
+- 🐛 **Bug Reports:** [Open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)
+- 💡 **Feature Requests:** [Open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)
+- 💬 **Questions:** [Discussions](https://github.com/YOUR_USERNAME/teslamate-tire-management/discussions)
 
 ---
 
-## Système de Gestion des Pneus pour TeslaMate
+# Système de Gestion des Pneus pour TeslaMate
 
-Un système complet de suivi et d'analyse des pneus pour TeslaMate qui surveille les performances, la consommation et les données TPMS.
+Un système complet de suivi et d'analyse des performances des pneus pour TeslaMate avec calcul automatique des statistiques et visualisation Grafana.
 
-## Fonctionnalités
+## 🌟 Fonctionnalités
 
-- Suivi de plusieurs jeux de pneus (été/hiver)
-- Statistiques de performance en temps réel
-- Surveillance de la température et de la pression (TPMS)
-- Consommation d'énergie par jeu de pneus (Wh/km)
-- Calcul automatique à partir des données de conduite TeslaMate
-- Comparaison historique des performances
-- Dashboard Grafana pour la visualisation
+- **Suivi Illimité de Pneus** - Gérez vos pneus été, hiver et toutes saisons
+- **Statistiques Automatiques** - Calcul depuis vos données de conduite TeslaMate
+- **Consommation d'Énergie** - Suivi en Wh/km avec facteur de conversion calibré
+- **Efficacité de Conduite** - Surveillance du pourcentage d'efficacité par jeu
+- **Corrélation Température** - Impact de la température sur les performances
+- **Comparaison Historique** - Comparez les jeux de pneus dans le temps
+- **Dashboard Grafana** - Analytics visuels avec plus de 7 panels
+- **Changements Faciles** - Commandes SQL simples pour changer de pneus
 
-## Prérequis
+## 🚀 Démarrage Rapide
 
-- TeslaMate (version récente)
-- Accès à la base de données PostgreSQL
-- Grafana
+### Prérequis
+
+- TeslaMate installé et fonctionnel
+- Accès à la base PostgreSQL
+- Grafana (inclus avec TeslaMate)
 - Docker (recommandé)
 
-## Installation
+### Installation (5 minutes)
 
-### 1. Configuration de la Base de Données
-
-Connectez-vous à votre base PostgreSQL TeslaMate :
+1. **Installer le schéma de base de données :**
 
 ```bash
-docker exec -it teslamate_database_1 psql -U teslamate teslamate
-```
-
-Ou si votre conteneur a un nom différent :
-
-```bash
+# Trouver votre conteneur PostgreSQL
 docker ps | grep postgres
-docker exec -it <nom_conteneur> psql -U teslamate teslamate
+
+# Installer le schéma (remplacer le nom si nécessaire)
+docker exec -i teslamate-database-1 psql -U teslamate teslamate < tire_management.sql
 ```
 
-### 2. Créer le Schéma de Base de Données
-
-Exécutez le script SQL pour créer les tables et fonctions nécessaires :
+2. **Ajouter vos données de pneus :**
 
 ```bash
-docker exec -i teslamate_database_1 psql -U teslamate teslamate < tire_management.sql
+docker exec -it teslamate-database-1 psql -U teslamate teslamate
 ```
 
-Ou copiez-collez le contenu de `tire_management.sql` directement dans votre session psql.
-
-### 3. Importer Vos Données de Pneus
-
-Modifiez le script SQL pour ajouter vos jeux de pneus. Exemple :
+Puis coller :
 
 ```sql
-INSERT INTO tire_sets (name, brand, model, size, start_date, end_date, tire_type, initial_odometer, final_odometer) VALUES
-('Été 2024', 'Michelin', 'PilotSport 3', '245/45 R19 102V XL', '2024-03-15', '2024-11-01', 'summer', 145000, 155000),
-('Hiver 2024-2025', 'Goodyear', 'UltraGrip Performance+', '245/45 R19 102V XL', '2024-11-01', NULL, 'winter', 155000, NULL);
+-- Ajouter un modèle de pneu
+INSERT INTO tire_models (brand, model, size, type) VALUES
+('Michelin', 'PilotSport 4', '245/45 R19 102V XL', 'Summer');
+
+-- Ajouter votre jeu actuel
+INSERT INTO tire_sets (car_id, name, tire_model_id, date_start) VALUES
+(1, 'Été 2024', 1, '2024-03-20');
+
+-- Calculer les statistiques
+SELECT update_current_tire_stats();
+
+-- Quitter
+\q
 ```
 
-**Champs importants :**
-- `start_date` et `end_date` : Définissent la période d'utilisation du jeu de pneus
-- `initial_odometer` et `final_odometer` : Relevés kilométriques à l'installation/retrait
-- Mettre `end_date` et `final_odometer` à `NULL` pour les pneus actuellement en service
+3. **Importer le dashboard Grafana :**
 
-### 4. Calculer les Statistiques
+- Ouvrir Grafana : `http://localhost:3000`
+- Aller dans **Dashboards** → **Import**
+- Télécharger `tire_dashboard.json`
+- Sélectionner la source **TeslaMate**
+- Cliquer sur **Import**
 
-Après l'import des données, lancez la fonction de calcul :
+Terminé ! 🎉
 
-```sql
-SELECT update_tire_statistics();
-```
-
-Cette fonction va :
-- Calculer la distance totale pour chaque jeu de pneus
-- Calculer la consommation moyenne d'énergie (Wh/km)
-- Calculer les pourcentages d'efficacité
-- Agréger les données de température
-
-### 5. Importer le Dashboard Grafana
-
-1. Ouvrez Grafana (généralement sur http://localhost:3000)
-2. Allez dans Dashboards → Import
-3. Téléchargez `tire_dashboard.json`
-4. Sélectionnez votre source de données TeslaMate
-5. Cliquez sur Import
-
-## Utilisation
+## 🔧 Utilisation
 
 ### Ajouter un Nouveau Jeu de Pneus
 
+Lors d'un changement de pneus :
+
 ```sql
--- Terminer le jeu de pneus actuel
+-- 1. Fermer le jeu actuel
 UPDATE tire_sets 
-SET end_date = '2025-11-16', 
-    final_odometer = 165000
-WHERE name = 'Hiver 2024-2025';
+SET date_end = CURRENT_DATE
+WHERE date_end IS NULL;
 
--- Ajouter le nouveau jeu de pneus
-INSERT INTO tire_sets (name, brand, model, size, start_date, tire_type, initial_odometer)
-VALUES ('Été 2025', 'Michelin', 'PilotSport 4', '245/45 R19 102V XL', '2025-03-20', 'summer', 165000);
+-- 2. Ajouter le nouveau jeu
+INSERT INTO tire_sets (car_id, name, tire_model_id, date_start)
+VALUES (1, 'Hiver 2025-2026', 2, CURRENT_DATE);
 
--- Recalculer les statistiques
-SELECT update_tire_statistics();
+-- 3. Mettre à jour les statistiques
+SELECT update_current_tire_stats();
 ```
 
-### Rafraîchissement Manuel des Données
+Ou utiliser le script automatisé :
 
-Les statistiques sont calculées à partir des données de conduite TeslaMate. Pour rafraîchir :
+```bash
+./update_current_tire.sh
+```
+
+### Mise à Jour des Statistiques
+
+Les statistiques se mettent à jour automatiquement :
+
+```bash
+./update_current_tire.sh
+```
+
+Ou configurez un cron pour une mise à jour quotidienne automatique :
+
+```bash
+# Éditer crontab
+crontab -e
+
+# Ajouter cette ligne (mise à jour tous les jours à 2h)
+0 2 * * * cd /chemin/vers/teslamate && ./update_current_tire.sh >> tire_update.log 2>&1
+```
+
+## 📐 Schéma de Base de Données
+
+### Tables Principales
+
+- **`tire_models`** - Catalogue des spécifications de pneus
+- **`tire_sets`** - Périodes d'installation des pneus
+- **`tire_set_statistics`** - Métriques de performance (auto-calculées)
+- **`tire_sets_with_stats`** - Vue complète (à utiliser pour les requêtes)
+
+### Fonction
+
+**`update_current_tire_stats()`** - Recalcule les statistiques pour les jeux actifs
+
+## ⚙️ Détails Techniques
+
+### Facteur de Conversion : 162
+
+Le facteur **162** est calibré pour Tesla Model S 75D.
+
+**Pourquoi 162 et pas 187.5 ?**
+- Théorique : 75 kWh ÷ 400 km = 187.5 Wh/km
+- TeslaMate utilise les estimations EPA, pas la capacité réelle
+- Calibré sur données TeslaFi réelles :
+  - TeslaFi Été 2024 : **152 Wh/km** (référence fiable)
+  - TeslaMate avec 187.5 : **176 Wh/km** (+15% trop élevé)
+  - TeslaMate avec 162 : **152 Wh/km** (parfait !)
+
+### Filtre Distance : >= 5 km
+
+Les trajets courts sont exclus car :
+- Préchauffage batterie : 400-1000 Wh/km sur 1-2 km
+- Climatisation disproportionnée sur trajets courts
+- Ces valeurs extrêmes faussent les moyennes
+
+## 🔍 Dépannage
+
+### Statistiques non mises à jour
 
 ```sql
-SELECT update_tire_statistics();
+-- Vérifier les trajets dans la période
+SELECT COUNT(*), MIN(start_date), MAX(start_date)
+FROM drives WHERE car_id = 1 AND start_date >= '2024-01-01';
+
+-- Vérifier les dates des pneus
+SELECT name, date_start, date_end FROM tire_sets ORDER BY date_start DESC;
+
+-- Relancer la mise à jour
+SELECT update_current_tire_stats();
 ```
 
-Vous pouvez également configurer un cron PostgreSQL ou un trigger pour automatiser cela.
+### Dashboard affiche "No Data"
 
-## Contribution
+1. Vérifier la plage temporelle (en haut à droite)
+2. Vérifier la source de données
+3. Exécuter `SELECT update_current_tire_stats();`
 
-N'hésitez pas à soumettre des issues et des pull requests !
+## 📄 Licence
 
-## Licence
+Licence MIT - Voir le fichier [LICENSE](LICENSE)
 
-Licence MIT - Voir le fichier LICENSE pour les détails
+## 🙏 Remerciements
+
+- [TeslaMate](https://github.com/teslamate-org/teslamate) - L'excellent enregistreur de données Tesla
+- La communauté TeslaMate pour les demandes et retours
+
+---
+
+**Made with ❤️ for the TeslaMate community**
