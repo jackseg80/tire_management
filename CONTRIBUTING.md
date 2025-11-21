@@ -74,7 +74,7 @@ We actively welcome your pull requests:
 1. **Fork and clone the repository:**
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/teslamate-tire-management.git
+git clone https://github.com/jackseg80/teslamate-tire-management.git
 cd teslamate-tire-management
 ```
 

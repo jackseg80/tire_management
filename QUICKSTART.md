@@ -26,7 +26,7 @@ Look for a container name like:
 
 ```bash
 # Download files
-git clone https://github.com/YOUR_USERNAME/teslamate-tire-management.git
+git clone https://github.com/jackseg80/teslamate-tire-management.git
 cd teslamate-tire-management
 
 # Install schema (replace container name if different)
@@ -179,6 +179,6 @@ Now that you're set up:
 
 **Total Time:** ~5 minutes ⏱️
 
-**Questions?** Check the [README](README.md) or open an [issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)!
+**Questions?** Check the [README](README.md) or open an [issue](https://github.com/jackseg80/teslamate-tire-management/issues)!
 
 Happy tracking!

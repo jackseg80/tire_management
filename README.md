@@ -420,9 +420,9 @@ MIT License - See [LICENSE](LICENSE) file for details
 
 ## Support
 
-- **Bug Reports:** [Open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)
-- **Feature Requests:** [Open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)
-- **Questions:** [Discussions](https://github.com/YOUR_USERNAME/teslamate-tire-management/discussions)
+- **Bug Reports:** [Open an issue](https://github.com/jackseg80/teslamate-tire-management/issues)
+- **Feature Requests:** [Open an issue](https://github.com/jackseg80/teslamate-tire-management/issues)
+- **Questions:** [Discussions](https://github.com/jackseg80/teslamate-tire-management/discussions)
 
 ---
 

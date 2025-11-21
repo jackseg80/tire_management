@@ -80,8 +80,8 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 ## Reporting Issues
 
-Found a bug or have a feature request? Please [open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues) on GitHub.
+Found a bug or have a feature request? Please [open an issue](https://github.com/jackseg80/teslamate-tire-management/issues) on GitHub.
 
 ---
 
-**Note:** Replace `YOUR_USERNAME` with your actual GitHub username throughout this project.
+**Note:** Replace `jackseg80` with your actual GitHub username throughout this project.
