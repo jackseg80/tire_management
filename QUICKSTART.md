@@ -2,7 +2,7 @@
 
 Get your TeslaMate Tire Management system running in **5 minutes**!
 
-## ✅ Prerequisites Check
+## Prerequisites Check
 
 Before starting:
 - [x] TeslaMate installed and running

@@ -1,10 +1,10 @@
-# 📋 Résumé du Projet - TeslaMate Tire Management
+# Résumé du Projet - TeslaMate Tire Management
 
-## 🎯 Vue d'Ensemble
+## Vue d'Ensemble
 
 Ce projet est un système complet de gestion et d'analyse des pneus pour TeslaMate. Il te permet de suivre les performances, la consommation et les statistiques de tous tes jeux de pneus.
 
-## 📦 Structure du Projet
+## Structure du Projet
 
 ```
 teslamate-tire-management/
@@ -31,7 +31,7 @@ teslamate-tire-management/
     └── README.md               # Instructions pour les screenshots
 ```
 
-## ⭐ Fichiers Principaux
+## Fichiers Principaux
 
 ### 1. tire_management.sql
 **Le cœur du système**
@@ -52,13 +52,13 @@ docker exec -i teslamate_database_1 psql -U teslamate teslamate < tire_managemen
 **Interface visuelle Grafana**
 
 Inclut 7 panels :
-1. 📊 Table d'ensemble des pneus
-2. 📈 Distance totale par jeu de pneus
-3. 📈 Consommation moyenne par jeu
-4. 🌡️ Jauge de température (pneu actuel)
-5. ⚡ Jauge de consommation (pneu actuel)
-6. 📏 Jauge de distance (pneu actuel)
-7. 📊 Comparaison été vs hiver
+1. Table d'ensemble des pneus
+2. Distance totale par jeu de pneus
+3. Consommation moyenne par jeu
+4. Jauge de température (pneu actuel)
+5. Jauge de consommation (pneu actuel)
+6. Jauge de distance (pneu actuel)
+7. Comparaison été vs hiver
 
 **Utilisation :**
 - Importer dans Grafana via Dashboard → Import → Upload JSON
@@ -115,9 +115,9 @@ Commandes disponibles :
 - v1.0.0 - Initial release (16 nov 2025)
 - Fonctionnalités planifiées
 
-## 🔧 Fonctionnalités
+## Fonctionnalités
 
-### ✅ Implémenté
+### Implémenté
 - Suivi de pneus illimités (été/hiver)
 - Calcul automatique des statistiques depuis TeslaMate
 - Dashboard Grafana avec 7 panels
@@ -126,7 +126,7 @@ Commandes disponibles :
 - Suivi de température
 - Scripts utilitaires
 
-### 🚀 Fonctionnalités Futures (à développer)
+### Fonctionnalités Futures (à développer)
 - Rafraîchissement automatique via triggers PostgreSQL
 - Intégration TPMS (pression des pneus)
 - Prédiction d'usure
@@ -135,7 +135,7 @@ Commandes disponibles :
 - API pour application mobile
 - Analytics avancées
 
-## 📊 Base de Données
+## Base de Données
 
 ### Table: tire_sets
 Stocke les informations de chaque jeu de pneus :
@@ -155,7 +155,7 @@ Statistiques calculées automatiquement :
 ### Fonction: update_tire_statistics()
 Recalcule toutes les stats à partir des données TeslaMate
 
-## 🎨 Dashboard Grafana
+## Dashboard Grafana
 
 Le dashboard affiche :
 - **Vue d'ensemble** : Table avec tous les pneus et leurs stats
@@ -163,7 +163,7 @@ Le dashboard affiche :
 - **Jauges en temps réel** : Stats du pneu actuel
 - **Comparaisons** : Performance été vs hiver
 
-## 🚀 Démarrage Rapide
+## Démarrage Rapide
 
 ### Installation en 3 étapes
 ```bash
@@ -184,7 +184,7 @@ SELECT update_tire_statistics();
 3. Sélectionner source de données TeslaMate
 4. Import !
 
-## 📝 Utilisation Quotidienne
+## Utilisation Quotidienne
 
 ### Ajouter un Nouveau Jeu de Pneus
 ```sql
@@ -210,7 +210,6 @@ SELECT update_tire_statistics();
 docker exec -it teslamate_database_1 psql -U teslamate teslamate -c "SELECT update_tire_statistics();"
 ```
 
-## 📸 Screenshots à Ajouter
 
 Avant de publier sur GitHub, ajoute au moins :
 - `screenshots/dashboard.png` - Vue complète du dashboard
@@ -247,7 +246,7 @@ Ce projet démontre :
 - ✅ Best practices open source
 - ✅ Automatisation avec scripts shell
 
-## 💡 Conseils
+## Conseils
 
 ### Pour l'Utilisation
 1. Lance `update_tire_statistics()` après chaque changement de pneus
@@ -266,7 +265,7 @@ Ce projet démontre :
 3. Accepte les contributions
 4. Reste actif et réponds aux questions
 
-## 🆘 Besoin d'Aide ?
+## Besoin d'Aide ?
 
 Si tu as des questions ou des problèmes :
 1. Consulte les fichiers de documentation
@@ -274,7 +273,7 @@ Si tu as des questions ou des problèmes :
 3. Utilise `./tire-mgmt.sh verify` pour diagnostiquer
 4. Crée une issue sur GitHub (après publication)
 
-## 🎉 Prochaines Étapes
+## Prochaines Étapes
 
 1. **Teste tout localement**
    - Installe le schéma
@@ -296,11 +295,11 @@ Si tu as des questions ou des problèmes :
    - Groupes Tesla
    - Reddit
 
-## 📞 Contact
+## Contact
 
 - GitHub: [TON_USERNAME]
 - Email: [TON_EMAIL] (optionnel)
 
 ---
 
-**Bravo pour ce projet ! Tu as créé quelque chose de vraiment utile pour la communauté TeslaMate ! 🎊**
+**Bravo pour ce projet ! Tu as créé quelque chose de vraiment utile pour la communauté TeslaMate !**

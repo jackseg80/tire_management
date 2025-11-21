@@ -1,6 +1,6 @@
 # Contributing to TeslaMate Tire Management
 
-First off, thank you for considering contributing to TeslaMate Tire Management! 🎉
+First off, thank you for considering contributing to TeslaMate Tire Management!
 
 ## Table of Contents
 
@@ -250,22 +250,22 @@ Describe your testing process
 We especially welcome contributions in these areas:
 
 ### High Priority
-- 🔧 **Testing on different Tesla models** - Verify conversion factors
-- 📱 **Mobile-friendly dashboard improvements**
-- 🌐 **Translations** - Documentation in other languages
-- 📊 **Additional Grafana panels** - New visualizations
+- **Testing on different Tesla models** - Verify conversion factors
+- **Mobile-friendly dashboard improvements**
+- **Translations** - Documentation in other languages
+- **Additional Grafana panels** - New visualizations
 
 ### Medium Priority
-- 🔄 **Automated testing** - SQL and dashboard tests
-- 📈 **Performance optimization** - Query improvements
-- 🎨 **UI/UX improvements** - Better dashboard layouts
-- 📝 **Documentation** - More examples, tutorials
+- **Automated testing** - SQL and dashboard tests
+- **Performance optimization** - Query improvements
+- **UI/UX improvements** - Better dashboard layouts
+- **Documentation** - More examples, tutorials
 
 ### Low Priority (Future Features)
-- 🚨 **Alert system** - Notifications for tire changes
-- 💰 **Cost tracking** - Track tire expenses
-- 🔌 **API development** - REST API for mobile apps
-- 🤖 **Tire wear prediction** - ML-based predictions
+- **Alert system** - Notifications for tire changes
+- **Cost tracking** - Track tire expenses
+- **API development** - REST API for mobile apps
+- **Tire wear prediction** - ML-based predictions
 
 ## Questions?
 
@@ -288,4 +288,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ---
 
-**Thank you for contributing to TeslaMate Tire Management!** 🚗💨
+**Thank you for contributing to TeslaMate Tire Management!**

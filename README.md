@@ -9,7 +9,7 @@ A comprehensive tire tracking and performance analytics system for TeslaMate wit
 
 ---
 
-## 🌟 Features
+## Features
 
 - **Track Unlimited Tire Sets** - Monitor summer, winter, and all-season tires
 - **Automatic Statistics** - Calculates performance from TeslaMate drive data
@@ -20,13 +20,13 @@ A comprehensive tire tracking and performance analytics system for TeslaMate wit
 - **Grafana Dashboard** - Visual analytics with 7+ panels
 - **Easy Tire Changes** - Simple SQL commands to switch tires
 
-## 📸 Screenshots
+## Screenshots
 
 ![Tire Management Dashboard](screenshots/dashboard.png)
 
 *Dashboard showing tire performance statistics, consumption, and efficiency*
 
-## 🎯 Why This System?
+## Why This System?
 
 Unlike generic tire tracking, this system:
 - ✅ **Automatically calculates** statistics from your actual driving data
@@ -35,7 +35,7 @@ Unlike generic tire tracking, this system:
 - ✅ **Preserves historical data** when importing from TeslaFi
 - ✅ **Updates seamlessly** with your TeslaMate installation
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -88,9 +88,9 @@ SELECT update_current_tire_stats();
 - Select **TeslaMate** data source
 - Click **Import**
 
-Done! 🎉
+Done!
 
-## 📊 Dashboard Overview
+## Dashboard Overview
 
 The Grafana dashboard includes:
 
@@ -339,7 +339,7 @@ ORDER BY consumption DESC
 LIMIT 10;
 ```
 
-## 📚 Advanced Usage
+## Advanced Usage
 
 ### Import Historical TeslaFi Data
 
@@ -398,7 +398,7 @@ WHERE date_end IS NOT NULL
 ORDER BY km_per_day DESC;
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please:
 
@@ -408,21 +408,21 @@ Contributions are welcome! Please:
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+## License
 
 MIT License - See [LICENSE](LICENSE) file for details
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [TeslaMate](https://github.com/teslamate-org/teslamate) - The amazing Tesla data logger
 - TeslaMate community for feature requests and feedback
 - Contributors who helped test and improve the system
 
-## 📞 Support
+## Support
 
-- 🐛 **Bug Reports:** [Open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)
-- 💡 **Feature Requests:** [Open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)
-- 💬 **Questions:** [Discussions](https://github.com/YOUR_USERNAME/teslamate-tire-management/discussions)
+- **Bug Reports:** [Open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)
+- **Feature Requests:** [Open an issue](https://github.com/YOUR_USERNAME/teslamate-tire-management/issues)
+- **Questions:** [Discussions](https://github.com/YOUR_USERNAME/teslamate-tire-management/discussions)
 
 ---
 
@@ -430,7 +430,7 @@ MIT License - See [LICENSE](LICENSE) file for details
 
 Un système complet de suivi et d'analyse des performances des pneus pour TeslaMate avec calcul automatique des statistiques et visualisation Grafana.
 
-## 🌟 Fonctionnalités
+## Fonctionnalités
 
 - **Suivi Illimité de Pneus** - Gérez vos pneus été, hiver et toutes saisons
 - **Statistiques Automatiques** - Calcul depuis vos données de conduite TeslaMate
@@ -441,7 +441,7 @@ Un système complet de suivi et d'analyse des performances des pneus pour TeslaM
 - **Dashboard Grafana** - Analytics visuels avec plus de 7 panels
 - **Changements Faciles** - Commandes SQL simples pour changer de pneus
 
-## 🚀 Démarrage Rapide
+## Démarrage Rapide
 
 ### Prérequis
 
@@ -494,7 +494,7 @@ SELECT update_current_tire_stats();
 - Sélectionner la source **TeslaMate**
 - Cliquer sur **Import**
 
-Terminé ! 🎉
+Terminé !
 
 ## 🔧 Utilisation
 
@@ -540,7 +540,7 @@ crontab -e
 0 2 * * * cd /chemin/vers/teslamate && ./update_current_tire.sh >> tire_update.log 2>&1
 ```
 
-## 📐 Schéma de Base de Données
+## Schéma de Base de Données
 
 ### Tables Principales
 
@@ -553,7 +553,7 @@ crontab -e
 
 **`update_current_tire_stats()`** - Recalcule les statistiques pour les jeux actifs
 
-## ⚙️ Détails Techniques
+## Détails Techniques
 
 ### Facteur de Conversion : 162
 
@@ -574,7 +574,7 @@ Les trajets courts sont exclus car :
 - Climatisation disproportionnée sur trajets courts
 - Ces valeurs extrêmes faussent les moyennes
 
-## 🔍 Dépannage
+## Dépannage
 
 ### Statistiques non mises à jour
 
@@ -596,11 +596,11 @@ SELECT update_current_tire_stats();
 2. Vérifier la source de données
 3. Exécuter `SELECT update_current_tire_stats();`
 
-## 📄 Licence
+## Licence
 
 Licence MIT - Voir le fichier [LICENSE](LICENSE)
 
-## 🙏 Remerciements
+## Remerciements
 
 - [TeslaMate](https://github.com/teslamate-org/teslamate) - L'excellent enregistreur de données Tesla
 - La communauté TeslaMate pour les demandes et retours
